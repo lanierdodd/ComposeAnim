@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,13 +26,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeAnimTheme {
-                Simple2()
+                Simple1Variant3()
             }
         }
     }
 }
 
-@Preview
+//@Preview
 @Composable
 fun Simple2() {
     var big by remember {
@@ -87,7 +85,7 @@ fun Simple1() {
     }
 }
 
-@Preview
+//@Preview
 @Composable
 fun Simple1Variant() {
     var big by remember {
@@ -113,12 +111,101 @@ fun Simple1Variant() {
     )
 }
 
+//@Preview()
+@Composable
+fun Simple1Variant1() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, tween(easing = LinearOutSlowInEasing))
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
+//@Preview
+@Composable
+fun Simple1Variant2() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, snap(3000))
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
+@Composable
+fun Simple1Variant3() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, keyframes {
+            188.dp at 150 with FastOutSlowInEasing
+            durationMillis = 1000
+        })
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ComposeAnimTheme {
