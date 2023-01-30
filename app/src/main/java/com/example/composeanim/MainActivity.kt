@@ -26,13 +26,13 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeAnimTheme {
-                Simple2()
+                Simple1Variant1()
             }
         }
     }
 }
 
-@Preview
+//@Preview
 @Composable
 fun Simple2() {
     var big by remember {
@@ -85,7 +85,7 @@ fun Simple1() {
     }
 }
 
-@Preview
+//@Preview
 @Composable
 fun Simple1Variant() {
     var big by remember {
@@ -111,7 +111,7 @@ fun Simple1Variant() {
     )
 }
 
-@Preview()
+//@Preview()
 @Composable
 fun Simple1Variant1() {
     var big by remember {
@@ -124,7 +124,7 @@ fun Simple1Variant1() {
         Animatable(size, Dp.VectorConverter)
     }
     LaunchedEffect(key1 = big) {
-        anim.animateTo(size, tween())
+        anim.animateTo(size, tween(easing = LinearOutSlowInEasing))
     }
     Box(
         modifier = Modifier.fillMaxSize()
@@ -132,7 +132,36 @@ fun Simple1Variant1() {
         Box(
             modifier = Modifier
                 .background(Color.Yellow)
-                .size(size)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
+//@Preview
+@Composable
+fun Simple1Variant2() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, snap(3000))
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(anim.value)
                 .clickable {
                     big = !big
                 }
