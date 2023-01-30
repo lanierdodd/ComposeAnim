@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeAnimTheme {
-                Simple1Variant3()
+                Simple1Variant4()
             }
         }
     }
@@ -192,6 +192,37 @@ fun Simple1Variant3() {
         Box(
             modifier = Modifier
                 .background(Color.Yellow)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
+@Composable
+fun Simple1Variant4() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, spring(
+            dampingRatio = Spring.DampingRatioHighBouncy,
+            stiffness = Spring.StiffnessVeryLow
+        ))
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Black)
                 .size(anim.value)
                 .clickable {
                     big = !big
