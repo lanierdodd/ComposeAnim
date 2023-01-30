@@ -4,9 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.VectorConverter
-import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -113,12 +111,41 @@ fun Simple1Variant() {
     )
 }
 
+@Preview()
+@Composable
+fun Simple1Variant1() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, tween())
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(size)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
 @Composable
 fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
     ComposeAnimTheme {
