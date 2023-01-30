@@ -4,6 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.composeanim.ui.theme.ComposeAnimTheme
 
@@ -31,6 +34,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@Preview
 @Composable
 fun Simple2() {
     var big by remember {
@@ -81,6 +85,32 @@ fun Simple1() {
             }
     ) {
     }
+}
+
+@Preview
+@Composable
+fun Simple1Variant() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.snapTo(if (big) 192.dp else 0.dp)
+        anim.animateTo(size)
+    }
+    Box(
+        modifier = Modifier
+            .background(Color.Yellow)
+            .size(size)
+            .clickable {
+                big = !big
+            }
+    )
 }
 
 @Composable
