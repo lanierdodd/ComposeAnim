@@ -26,7 +26,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             ComposeAnimTheme {
-                Simple1Variant1()
+                Simple1Variant3()
             }
         }
     }
@@ -154,6 +154,37 @@ fun Simple1Variant2() {
     }
     LaunchedEffect(key1 = big) {
         anim.animateTo(size, snap(3000))
+    }
+    Box(
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Box(
+            modifier = Modifier
+                .background(Color.Yellow)
+                .size(anim.value)
+                .clickable {
+                    big = !big
+                }
+        )
+    }
+}
+
+@Composable
+fun Simple1Variant3() {
+    var big by remember {
+        mutableStateOf(false)
+    }
+    val size = remember(big) {
+        if (big) 96.dp else 48.dp
+    }
+    val anim = remember {
+        Animatable(size, Dp.VectorConverter)
+    }
+    LaunchedEffect(key1 = big) {
+        anim.animateTo(size, keyframes {
+            188.dp at 150 with FastOutSlowInEasing
+            durationMillis = 1000
+        })
     }
     Box(
         modifier = Modifier.fillMaxSize()
